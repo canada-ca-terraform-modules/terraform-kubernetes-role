@@ -1,0 +1,24 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.128.0/containers/ubuntu
+{
+    "name": "Terraform k8s role",
+    "dockerFile": "Dockerfile",
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+        "editor.tabSize": 2,
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "[terraform]": {
+            "editor.formatOnSave": true
+        },
+        "terraform-ls.experimentalFeatures": {
+            "validateOnSave": true
+        }
+    },
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "hashicorp.terraform",
+        "golang.go",
+    ],
+    // Don't run as root!
+    "remoteUser": "vscode"
+}
