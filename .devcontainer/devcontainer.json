@@ -3,7 +3,9 @@
 {
     "name": "Terraform k8s role",
     "dockerFile": "Dockerfile",
-    // Set *default* container specific settings.json values on container create.
+    "runArgs": ["--init"],
+    "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+    "overrideCommand": false,
     "settings": {
         "editor.tabSize": 2,
         "terminal.integrated.shell.linux": "/bin/bash",
@@ -19,6 +21,5 @@
         "hashicorp.terraform",
         "golang.go",
     ],
-    // Don't run as root!
     "remoteUser": "vscode"
 }

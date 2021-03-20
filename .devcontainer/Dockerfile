@@ -1,82 +1,55 @@
-#-------------------------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
-#-------------------------------------------------------------------------------------------------------------
-ARG VERSION="20.04"
+FROM mcr.microsoft.com/vscode/devcontainers/base:buster
 
-FROM ubuntu:${VERSION}
+ARG INSTALL_ZSH="true"
+ARG UPGRADE_PACKAGES="true"
+ARG ENABLE_NONROOT_DOCKER="true"
+ARG USE_MOBY="true"
 
-ARG DEBIAN_FRONTEND=noninteractive
-ARG TERRAFORM_VERSION=0.13.4
-ARG TFLINT_VERSION=0.18.0
-ARG GO_VERSION=1.15.1
-ARG GOTESTSUM_VERSION=0.5.3
-ARG GOLANGCILINT_VERSION=1.31.0
-
-# Install common tools and packages
+ARG USERNAME=automatic
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+COPY library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    gnupg \
-    apt-transport-https \
-    lsb-release \
-    ca-certificates \
-    jq \
-    curl \
-    git \
-    unzip
+    && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+    && /bin/bash /tmp/library-scripts/docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" "${USE_MOBY}" \
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
-RUN mkdir -p /tmp/docker-downloads \
-    # Install Terraform, tflint
-    && curl -sSL -o /tmp/docker-downloads/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
-    && unzip /tmp/docker-downloads/terraform.zip \
-    && mv terraform /usr/local/bin \
-    && cd ~ \ 
-    && rm -rf /tmp/docker-downloads \
-    # Clean up
-    && apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
+ARG TERRAFORM_VERSION=0.14.8
+ARG TFLINT_VERSION=0.25.0
+ARG GO_VERSION=1.16.1
+ARG GOTESTSUM_VERSION=1.6.2
+ARG GOLANGCILINT_VERSION=1.38.0
 
 # Make shared download folder
-RUN mkdir -p /tmp/docker-downloads
+RUN mkdir -p /tmp/downloads
+
+# Install Terraform
+RUN curl -sSL -o /tmp/downloads/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && unzip /tmp/downloads/terraform.zip \
+    && mv terraform /usr/local/bin
 
 # TFLint
 RUN https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-# Install Go into /usr/local/go
-RUN curl -fsS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/docker-downloads/golang.tar.gz \
-    && tar -C /usr/local -xvf /tmp/docker-downloads/golang.tar.gz 
+# Go
+RUN curl -fsS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/downloads/golang.tar.gz \
+    && tar -C /usr/local -xvf /tmp/downloads/golang.tar.gz 
 
-# Install gotestsum into /usr/bin
-RUN curl -fsSL https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_linux_amd64.tar.gz -o /tmp/docker-downloads/gotestsum.tar.gz \
-    && tar -C /tmp/docker-downloads -xzf /tmp/docker-downloads/gotestsum.tar.gz \
-    && mv /tmp/docker-downloads/gotestsum /usr/bin
+# gotestsum
+RUN curl -fsSL https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_linux_amd64.tar.gz -o /tmp/downloads/gotestsum.tar.gz \
+    && tar -C /tmp/downloads -xzf /tmp/downloads/gotestsum.tar.gz \
+    && mv /tmp/downloads/gotestsum /usr/bin
 
-# Install golangci-lint into /usr/bin
+# golangci-lint
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/bin v${GOLANGCILINT_VERSION}
+
+# Cleanup
+RUN rm -rf /tmp/downloads    
 
 # Golang environmentals and path
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 ENV PATH=$PATH:/usr/local/go/bin
 
-# clean up the download folder
-RUN rm -rf /tmp/docker-downloads
-
-ARG DEBIAN_FRONTEND=interactive
-
-# Set up a non root user called 'vscode'
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
-# Create the user
-# Note. We don't switch to it, so the pipelines still run as root
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    # Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
+CMD [ "sleep", "infinity" ]
