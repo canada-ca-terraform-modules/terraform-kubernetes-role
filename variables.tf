@@ -32,7 +32,7 @@ variable "create" {
 }
 
 variable "dependencies" {
-  description = "Dependencies of the Role and RoleBinding"
+  description = "Allows module to module dependencies"
   type        = list
   default     = []
 }

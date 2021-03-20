@@ -24,13 +24,12 @@ resource "kubernetes_role" "role" {
     namespace = var.namespace
   }
 
-  # Users
   dynamic "rule" {
     for_each = var.rules
     content {
-      api_groups = rule.api_groups
-      verbs      = rule.verbs
-      resources  = rule.resources
+      api_groups = rule.value["api_groups"]
+      verbs      = rule.value["verbs"]
+      resources  = rule.value["resources"]
     }
   }
 
@@ -52,12 +51,11 @@ resource "kubernetes_role_binding" "role-binding" {
     api_group = "rbac.authorization.k8s.io"
   }
 
-  # Role binding subject
   dynamic "subject" {
     for_each = var.subjects
     content {
-      kind      = subject.kind
-      name      = subject.name
+      kind      = subject.value["kind"]
+      name      = subject.value["name"]
       api_group = "rbac.authorization.k8s.io"
     }
   }
