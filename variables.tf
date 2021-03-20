@@ -1,9 +1,3 @@
-variable "create" {
-  description = "Should the Role and RoleBinding objects be created"
-  type        = bool
-  default     = true
-}
-
 variable "name" {
   description = "Name of the Kubernetes Role to create"
   type        = string
@@ -16,27 +10,29 @@ variable "namespace" {
 
 variable "rules" {
   description = "The role's rule, which should include lists of `api_groups`, `verbs` and `resources`"
-  type = object({
+  type = list(object({
     api_groups = list(string)
     verbs      = list(string)
     resources  = list(string)
-
-  })
-  default = {
-    api_groups = []
-    verbs      = []
-    resources  = []
-  }
+  }))
 }
 
-variable "subject" {
+variable "subjects" {
   description = "The role binding's subject, which should include lists of `kind` and `name`"
-  type = object({
+  type = list(object({
     kind = list(string)
     name = list(string)
-  })
-  default = {
-    kind = []
-    name = []
-  }
+  }))
+}
+
+variable "create" {
+  description = "Should the Role and RoleBinding objects be created?"
+  type        = bool
+  default     = true
+}
+
+variable "dependencies" {
+  description = "Dependencies of the Role and RoleBinding"
+  type        = list
+  default     = []
 }
