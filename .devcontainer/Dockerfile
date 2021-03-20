@@ -31,9 +31,6 @@ RUN mkdir -p /tmp/docker-downloads \
     && curl -sSL -o /tmp/docker-downloads/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && unzip /tmp/docker-downloads/terraform.zip \
     && mv terraform /usr/local/bin \
-    && curl -sSL -o /tmp/docker-downloads/tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_darwin_amd64.zip \
-    && unzip /tmp/docker-downloads/tflint.zip \
-    && mv tflint /usr/local/bin \
     && cd ~ \ 
     && rm -rf /tmp/docker-downloads \
     # Clean up
@@ -43,6 +40,9 @@ RUN mkdir -p /tmp/docker-downloads \
 
 # Make shared download folder
 RUN mkdir -p /tmp/docker-downloads
+
+# TFLint
+RUN https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
 # Install Go into /usr/local/go
 RUN curl -fsS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/docker-downloads/golang.tar.gz \
