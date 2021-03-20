@@ -20,8 +20,8 @@ variable "rules" {
 variable "subjects" {
   description = "The role binding's subject, which should include lists of `kind` and `name`"
   type = list(object({
-    kind = list(string)
-    name = list(string)
+    kind = string
+    name = string
   }))
 }
 
