@@ -17,6 +17,9 @@ help: ## List the targets
 test: ## Run the Go unit tests
 	go test -v test/*.go
 
+terraform_docs: ## Generate README docs
+	terraform-docs markdown .
+
 terraform_lint: ## Terraform lint the module
 	tflint .
 
