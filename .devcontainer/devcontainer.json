@@ -9,12 +9,9 @@
     "settings": {
         "editor.tabSize": 2,
         "terminal.integrated.shell.linux": "/bin/bash",
-        "[terraform]": {
-            "editor.formatOnSave": true
-        },
-        "terraform-ls.experimentalFeatures": {
-            "validateOnSave": true
-        }
+        "[terraform]": { "editor.formatOnSave": true },
+        "terraform-ls.experimentalFeatures":  {"validateOnSave": true },
+        "gopls": { "experimentalWorkspaceModule": true }
     },
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
