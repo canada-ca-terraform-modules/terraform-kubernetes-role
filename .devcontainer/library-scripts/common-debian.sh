@@ -110,8 +110,7 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         man-db \
         strace \
         manpages \
-        manpages-dev \
-        make "
+        manpages-dev "
         
     # Needed for adding manpages-posix and manpages-posix-dev which are non-free packages in Debian
     if [ "${ADD_NON_FREE_PACKAGES}" = "true" ]; then
