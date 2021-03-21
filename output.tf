@@ -1,5 +1,11 @@
-output "name" {
+# Name of the Role object
+output "role_name" {
   value = var.name
+}
+
+# Name of the RoleBinding object
+output "role_binding_name" {
+  value = "${var.name}-binding"
 }
 
 # Part of a hack for module-to-module dependencies.
