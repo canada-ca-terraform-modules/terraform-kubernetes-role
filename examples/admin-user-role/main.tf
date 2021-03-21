@@ -13,7 +13,7 @@ provider "kubernetes" {
 }
 
 # Create an admin Role in the default namespace
-module "admin-role" {
+module "admin_role" {
   source    = "../../"
   name      = "admin-role"
   namespace = "default"

@@ -19,7 +19,7 @@ resource "kubernetes_namespace" "test" {
 }
 
 # Create a read-only role in a "test" namespace
-module "read-only-role" {
+module "read_only_role" {
   source    = "../../"
   name      = "read-only-role"
   namespace = "test"
