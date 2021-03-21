@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  test:
+    name: 'Test'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,6 +20,8 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
 
     - name: Terraform Init
       run: terraform init
@@ -30,4 +32,12 @@ jobs:
     - name: Terraform Lint
       run: |
         curl https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-        make terraform_lint     
+        make terraform_lint
+
+    - name: Create test k3d cluster
+      run: |
+        curl https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+        make cluster_create
+
+    - name: Run tests
+      run: make test

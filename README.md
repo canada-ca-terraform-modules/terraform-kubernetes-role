@@ -32,3 +32,10 @@ None.
 | depended\_on | Part of a hack for module-to-module dependencies. https://github.com/hashicorp/terraform/issues/1178#issuecomment-449158607 https://github.com/hashicorp/terraform/issues/1178#issuecomment-473091030 |
 | role\_binding\_name | Name of the RoleBinding object |
 | role\_name | Name of the Role object |
+
+# Local testing
+You can use k3d in the devcontainer to run a small test cluster with the examples:
+```sh
+make cluster_create_dev
+make test
+```
