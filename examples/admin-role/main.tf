@@ -9,7 +9,7 @@ module "admin-role" {
     resources  = ["*"]
   }]
   subjects = [{
-    kind = []
-    name = []
+    kind = "User"
+    name = "Admin"
   }]
 }
