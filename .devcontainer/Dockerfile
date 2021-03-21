@@ -16,9 +16,11 @@ RUN apt-get update \
 
 ARG TERRAFORM_VERSION=0.14.8
 ARG TFLINT_VERSION=0.25.0
+ARG TERRAFORM_DOC_VERSION=0.11.2
 ARG GO_VERSION=1.16.1
 ARG GOTESTSUM_VERSION=1.6.2
 ARG GOLANGCILINT_VERSION=1.38.0
+ARG KUBECTL_VERSION=1.18.12
 
 # Make shared download folder
 RUN mkdir -p /tmp/downloads
@@ -29,7 +31,15 @@ RUN curl -sSL -o /tmp/downloads/terraform.zip https://releases.hashicorp.com/ter
     && mv terraform /usr/local/bin
 
 # TFLint
-RUN https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+RUN curl -L -o /tmp/downloads/tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_$(uname)_amd64.zip \
+    && unzip /tmp/downloads/tflint.zip \
+    && mv tflint /usr/local/bin
+
+# Install Terraform-docs
+RUN curl -Lo /tmp/downloads/terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOC_VERSION}/terraform-docs-v${TERRAFORM_DOC_VERSION}-$(uname)-amd64.tar.gz \
+    && tar -xzf /tmp/downloads/terraform-docs.tar.gz \
+    && chmod +x terraform-docs \
+    && mv terraform-docs /usr/local/bin
 
 # Go
 RUN curl -fsS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/downloads/golang.tar.gz \
@@ -47,7 +57,7 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 
 # Install kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.12/bin/linux/amd64/kubectl \
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x ./kubectl \
     && mv ./kubectl /usr/local/bin
 
