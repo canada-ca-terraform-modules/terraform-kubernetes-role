@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  test:
+    name: 'Test'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,4 +30,12 @@ jobs:
     - name: Terraform Lint
       run: |
         curl https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-        make terraform_lint     
+        make terraform_lint
+
+    - name: Create test k3d cluster
+      run: |
+        curl https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+        make create_cluster
+
+    - name: Run tests
+      run: make test

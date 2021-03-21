@@ -1,10 +1,10 @@
-# Assumes you are working in the .devcontainer
-
 .DEFAULT_GOAL := help
 
 cluster_create: ## Create a k3d cluster named `test`
 	k3d cluster create test
 	kubectl config use-context k3d-test
+
+cluster_create_dev: cluster_create ## Create a k3d cluster for use in the devcontainer
 	# Update the k3d localhost KubeAPI IP to the host IP where the docker containers are running
 	sed -i -e "s/0.0.0.0/host.docker.internal/g" ${HOME}/.kube/config
 
@@ -25,7 +25,9 @@ terraform_lint: ## Terraform lint the module
 
 .PHONY: \
 	cluster_create \
+	cluster_create_dev \
 	cluster_delete \
 	help \
 	test \
+	terraform_docs \
 	terraform_lint
