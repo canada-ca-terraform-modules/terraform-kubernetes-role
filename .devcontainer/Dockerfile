@@ -43,6 +43,14 @@ RUN curl -fsSL https://github.com/gotestyourself/gotestsum/releases/download/v${
 # golangci-lint
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/bin v${GOLANGCILINT_VERSION}
 
+# Install k3d
+RUN curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+
+# Install kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.12/bin/linux/amd64/kubectl \
+    && chmod +x ./kubectl \
+    && mv ./kubectl /usr/local/bin
+
 # Cleanup
 RUN rm -rf /tmp/downloads    
 
