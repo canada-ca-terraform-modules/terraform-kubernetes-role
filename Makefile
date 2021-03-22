@@ -15,7 +15,7 @@ help: ## List the targets
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 test: ## Run the Go unit tests
-	cd test && go mod tidy &&	go test -v
+	cd test && go mod tidy && go test -v
 
 terraform_docs: ## Generate README docs
 	terraform-docs markdown .
