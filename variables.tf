@@ -30,9 +30,3 @@ variable "create" {
   type        = bool
   default     = true
 }
-
-variable "dependencies" {
-  description = "Allows module to module dependencies"
-  type        = list
-  default     = []
-}

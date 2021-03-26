@@ -1,23 +1,5 @@
-
-# Part of a hack for module-to-module dependencies.
-# https://github.com/hashicorp/terraform/issues/1178#issuecomment-449158607
-# https://github.com/hashicorp/terraform/issues/1178#issuecomment-473091030
-# Make sure to add this null_resource.dependency_getter to the `depends_on`
-# attribute to all resource(s) that will be constructed first within this
-# module:
-resource "null_resource" "dependency_getter" {
-  triggers = {
-    my_dependencies = join(",", var.dependencies)
-  }
-
-  lifecycle {
-    ignore_changes = [
-      triggers["my_dependencies"],
-    ]
-  }
-}
-
 resource "kubernetes_role" "role" {
+  count = var.create ? 1 : 0
 
   metadata {
     name      = var.name
@@ -32,13 +14,10 @@ resource "kubernetes_role" "role" {
       resources  = rule.value["resources"]
     }
   }
-
-  depends_on = [
-    null_resource.dependency_getter,
-  ]
 }
 
 resource "kubernetes_role_binding" "role-binding" {
+  count = var.create ? 1 : 0
 
   metadata {
     name      = "${var.name}-binding"
@@ -59,16 +38,4 @@ resource "kubernetes_role_binding" "role-binding" {
       api_group = "rbac.authorization.k8s.io"
     }
   }
-
-  depends_on = [
-    null_resource.dependency_getter,
-  ]
-}
-
-# Part of a hack for module-to-module dependencies.
-# https://github.com/hashicorp/terraform/issues/1178#issuecomment-449158607
-resource "null_resource" "dependency_setter" {
-  depends_on = [
-
-  ]
 }
