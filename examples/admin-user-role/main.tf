@@ -23,7 +23,8 @@ module "admin_role" {
     resources  = ["*"]
   }]
   subjects = [{
-    kind = "User"
-    name = "Admin"
+    kind      = "User"
+    name      = "Admin"
+    namespace = null
   }]
 }
