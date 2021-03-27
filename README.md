@@ -1,4 +1,4 @@
-[![Build status](https://github.com/patheard/terraform-kubernetes-role/actions/workflows/terraform.yml/badge.svg)](https://github.com/patheard/terraform-kubernetes-role/actions/workflows/terraform.yml)
+[![Build status](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-role/actions/workflows/terraform.yml/badge.svg)](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-role/actions/workflows/terraform.yml)
 
 # Terraform Kubernetes Role
 Creates Kubernetes Role and RoleBinding objects in a namespace.  Supports `User` and `Group` subjects for the RoleBinding.
