@@ -38,8 +38,9 @@ module "read_only_role" {
     }
   ]
   subjects = [{
-    kind = "Group"
-    name = "Readers"
+    kind      = "ServiceAccount"
+    name      = "default"
+    namespace = "kube-system"
   }]
   depends_on = [
     kubernetes_namespace.test

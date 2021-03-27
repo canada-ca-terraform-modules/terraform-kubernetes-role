@@ -3,8 +3,19 @@
 # Terraform Kubernetes Role
 Creates Kubernetes Role and RoleBinding objects in a namespace.  Supports `User` and `Group` subjects for the RoleBinding.
 
-# Dependencies
-None.
+# Requirements
+
+No requirements.
+
+# Providers
+
+| Name | Version |
+|------|---------|
+| kubernetes | n/a |
+
+# Modules
+
+No Modules.
 
 # Resources
 
@@ -21,7 +32,7 @@ None.
 | name | Name of the Kubernetes Role to create | `string` | n/a | yes |
 | namespace | Kubernetes namespace to create the Role in.  The namespace must exist. | `string` | n/a | yes |
 | rules | The role's rule, which should include lists of `api_groups`, `verbs` and `resources` | <pre>list(object({<br>    api_groups = list(string)<br>    verbs      = list(string)<br>    resources  = list(string)<br>  }))</pre> | n/a | yes |
-| subjects | The role binding's subject, which should include lists of `kind` and `name` | <pre>list(object({<br>    kind = string<br>    name = string<br>  }))</pre> | n/a | yes |
+| subjects | The role binding's subject.  To use the `default` namespace for a kind of `User` or `Group`, pass a `null` namespace. | <pre>list(object({<br>    kind      = string<br>    name      = string<br>    namespace = string<br>  }))</pre> | n/a | yes |
 
 # Outputs
 

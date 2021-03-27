@@ -35,7 +35,8 @@ resource "kubernetes_role_binding" "role-binding" {
     content {
       kind      = subject.value["kind"]
       name      = subject.value["name"]
-      api_group = "rbac.authorization.k8s.io"
+      namespace = subject.value["namespace"] == null ? "default" : subject.value["namespace"]
+      api_group = subject.value["kind"] == "ServiceAccount" ? "" : "rbac.authorization.k8s.io"
     }
   }
 }
